@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+  <head>
+    <title>15 minutes Guide to sqlREST</title>
+    <link href="style.css" rel="stylesheet"/>
+  </head>
+
+  <body>
+  
+     <table width="100%">
+   	<tr>
+   		<td><h1>15 minutes Guide to sqlREST</h1></td>
+   		<td><a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=78848&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a>
+</td>
+   	</tr>
+   </table>
+  
+    
+
+    <p>This guide shows, how a relational database can be enabled as REST style Web Service within minutes. You can read the guide and try the <a href="http://www.thomas-bayer.com/rest-demo.htm">rest examples online</a> or you can deploy sqlREST and do it on your computer.</p>
+
+	<h2>Requirements</h2>
+
+    <p>To run sqlREST you need a Java runtime version 1.4 or higher and a Servlet 1.2 conformant Web Container like Tomcat 4.X or newer.</p>
+
+    <h2>Installation</h2>
+
+    <p>The Installation is quite simple:</p>
+
+    <ul>
+       <li>First install a Java runtime or SDK. We recommend using Version 1.4.1 or higher.</li>
+       <li>Install a Servlet Container. Tomcat for example.</li>
+       <li>Copy the sqlrest directory inside the webapps directory to the webapps directory of your servlet engine.</li>
+       <li>Start the servlet engine and point your browser at http://localhost:8080/sqlrest, if your Servlet engine is running at port 8080.</li>
+    </ul>
+
+	<h2>Querying</h2>
+
+    <h3>A glimpse to a Web Service</h3>
+
+    <p>After the installation you can start exploring the Web Service with your browser. A good starting point for querying the web service is the list of toplevel resources. The toplevel list can be accessed using a URL like the following:</p>
+
+    <code>http://host:port/sqlrest/</code>
+
+    <p>Perhaps at your installtion the right URL is:</p>
+
+    <code>http://localhost:8080/sqlrest/</code>
+
+    <p>You should get a result like the one in picture 1.</p>
+
+    <img src="images/get-tables.gif" alt="Toplevel list of resources"/><br/>
+    <b>Picture 1.) </b>Toplevel list of resources<br/>
+
+    <p>From here you can dive deeper into the service. This Web Service offers four kinds of resources. There are customers, products, invoices and items. Every kind of resource have a XLink attribute href with an URL. A list of resources is a resource too.</p>
+ 
+   <p>You can copy and paste the URL in Addressbar of your browser.</p>
+
+	<table class="attention">
+      <tr>
+        <th>Attention:</th>
+        <td>Cause version 0.3.1 doesn't support composed primary keys, the items resources can't be accessed.</td>
+      </tr>
+    </table>
+
+    <p>As you might have guessed the resources shown in the response are generated on-the-fly from database metadata. Metadata provides a description of data. For example information about the tables, columns and relations in a database. Every kind of resource correspondends to a table in the database. sqlREST can be used with almost all database on condition there is a suitable JDBC driver. The meta data provided by the driver about the database is used by sqlREST to compute the response and to execute actions on server side.</p>
+
+    <h3>List of invoices</h3>
+
+    <p>Next we want to see a list of invoices. Enter the following URL in your addressbar:</p>
+
+    <code>http://localhost:8080/sqlrest/INVOICE/</code>
+
+    <p>The result is a list pointing to resources representing invoices. Every row in the invoice table is referenced by a  XLink href attribute as you can see in picture 2.</p>
+
+    <img src="images/get-invoices.gif"/><br/>
+    <b>Picture 2.) </b>A list pointing to invoice resources<br/>
+
+    <p>Choose an invoice an follow the link. For e.g.:</p>
+
+    <code>http://localhost:8080/sqlrest/INVOICE/31/</code>
+
+    <p>The representation of an invoice entity is shown in picture 3. The details of the invoice contains an id, a total amount and an id of the customer the invoice belongs to. The element CUSTOMERID has an XLink reference to the refered customer. sqlREST uses the database meta data to create links to referenced resources.</p>
+
+    <img src="images/get-invoice.gif" alt="Representation of a customer"/><br/>
+    <b>Picture 3.) </b>The representation of a customer<br/>
+
+    <p>As you can imagine, if you follow the link:</p>
+
+    <code>http://localhost:8080/sqlrest/CUSTOMER/22/</code>
+
+    <p>you will get the representation of a customer like the one in the screenshot in picture 4.</p>
+
+    <img src="images/get-customer.gif" alt="Representation of a customer"/><br/>
+    <b>Picture 4.) </b>Representation of a customer<br/>
+
+    <p>We have followed the links in the browser, like we follow links in every web application. Despite the fact, that we can't follow the links by a klick. We have to copy the location into the addressbar. A Web Service is for engines not for humans. A client requests the resources, interprets the result and dives deeper into the system following the links.</p>
+
+    <h2>The difference to RPC style Web Services</h2>
+
+    <p>In an RPC style Web Service like SOAP or XML-RPC you may get back a result of a certain type. For example you get back a string type with the value BA4C. The clients needs to know the meaning of the result in order to make further processing. Maybe BA4C is a title of something or BA4C is some code or it is a primary key refering to a different resource. Every method with a correspondending parameter type can be invoked with the value BA4C. But not every call makes any sense. The knowledge about the methods and parameters that can be called with a previously returned value must be available to the client.</p>
+
+    <code>
+     <pre>
+getCustomer("BA4C");        // OK - A Customer will be returned
+getProduct("BA4C");         // Nonsense - No product will be found
+setTitle("BA4C");           // Will work, but not a nice title for a document
+setDescription("BA4C");     // Will work also, but it is no description
+     </pre>
+    </code>
+
+    <p>In a RESTian Web Service you get the value BA4C and a link to follow. The client gets all the information with the response it needs, for following the link.</p>
+
+    <h2>REST Browser</h2>    
+
+    <p>GET requests for querying can be send to RESTian Web Service using an ordinary Web Browser like Mozilla, Opera or MS Internet Explorer. Unfortunatly POST, PUT and DELETE can't be send that easy. The reminder of this guide uses a REST Gateway called <a href="http://thomas-bayer.com/restgate/">RESTGate</a> to illustrate the examples with screenshots. You can use also small programs in Java, Perl, Ruby or your prefered language, if you want to try the examples. With the screenshots provided in this guide it should be possible to follow without trying the examples yourself.</p>
+
+    <p>The screenshots in this guide are form an early version of <a href="http://thomas-bayer.com/restgate/">RESTGate</a>. Formerly known as webrest.</p>
+
+    <p>Lets have a look at the REST Gateway. A request with URL, Method and Content can be specified in a form. RESTGate takes the information from the form and sends a HTTP request to a REST Web Service.</p>
+
+    <img src="images/wwwrest-gateway.gif" alt=""/><br/>
+    <b>Picture 5.) </b>RESTGate - A Gateway tool for REST Web Services<br/>
+
+    <p>The Web Services processes the request and answers with a response Message. The response is read by the gateway and transformed to a HTML Page as you can see in Picture 6.</p>
+
+    <img src="images/get-resources.gif" alt="A response in RESTGate"/><br/>
+    <b>Picture 6.) </b>A response in RESTGate<br/>
+
+    <p>Next we will see how to work with DELETE, POST and PUT methods.</p>
+
+    
+
+    <h3>Removing resources</h3>    
+
+    <p>HTTP provides the DELETE Method to remove resources from the server. This method is scarcely used in normal Web applications. In REST the DELETE Method is the choice to remove resources. A DELETE request send to resource will cause its deletion in a RESTian Web Service. Picture 7 shows RESTGate with a DELETE request for an invoice.</p>
+
+    <img src="images/delete-invoice.gif" alt="Removing an invoice using HTTP DELETE"/><br/>
+    <b>Picture 7.) </b>Removing a resource with HTTP Delete<br/>
+
+    <p>At server side sqlREST receives the delete request and executes the deletion of the addressed resource. In Picture 8 you can see the server is responding with a <em>HTTP Status Code</em> of 200. A Status Code of 200 means, everything is Ok.</p>
+
+
+    <img src="images/delete-invoice-response.gif" alt="Response for HTTP DELETE"/><br/>
+    <b>Picture 8.) </b>Repsonse after removing a resource<br/>
+
+    <h3>Altering resources</h3>
+
+    <p>The representation of a product resource is shown in figure 9. We want to update the price to a new value. To modify an existing resource we use a POST request.</p>
+
+    <img src="images/get-product.gif" alt=""/><br/>
+    <b>Picture 9.) The product with the old price</b><br/>
+
+    <p>With the request we send content to the server containing new values for the resource. Figure 10 shows the POST request method and the new value for the price expressed in XML.</p>
+
+    <img src="images/post-change-resource.gif" alt="Altering a resource with POST"/><br/>
+    <b>Picture 10.) </b>Altering a resource with POST<br/>
+
+    <p>At server side the product resource is altered to the new value <i>8.5</i>.  sqlREST creates a SQL-Update statement using the XML content and executes the statement. Depending on success the <em>Status Code</em> is either 200 OK or 403 Forbidden.</p>
+
+    <img src="images/post-change-resource-response.gif" alt="Response after modifying a product"/><br/>
+    <b>Picture 11.) </b>Response after modifying a product<br/>
+
+    <p>The next picture shows a representation of the modified resource.</p>
+
+    <img src="images/get-changed-resource.gif" alt="The product with the new price"/><br/>
+    <b>Picture 12.) </b>The product with the new price<br/>
+
+    <h2>Creating resources</h2>
+
+    <p>New resources can be created by POST and PUT requests.</p>
+
+    <h3>Creating with POST</h3>
+
+    <p>A new resource can be created by a POST request. The request have to be send to a higher level resource. To create a new product we send a POST request containing all the data to a URL representing the product table. In figure 13 you can see a request creating a new product with the ID 60.</p>
+
+    <img src="images/post-new-product.gif" alt="Create a new product using POST"/><br/>
+    <b>Picture 13.) </b>Create a new product using POST<br/>
+
+    <h3>Creating with PUT</h3>
+
+    <p>To create a resource with PUT a request is send to a URL, which should be the address for the new resource. The URL in figure 14 contains the new ID with a value of 61. In the content there are only elements with values for none-primarykey field.</p>
+
+    <img src="images/put-new-product.gif" alt="Create a new product using PUT"/><br/>
+    <b>Picture 14.) </b>Create a new product using PUT<br/>
+
+     <h2>What to do next?</h2>
+
+     <p>You can connect sqlREST with your own database and build sample Web Services using the REST Style. All you have to do, is to configure a JDBC connection as described in the <a href="user-guide.htm">user guide</a>.</p>
+
+    <b>Enjoy sqlREST!</b>
+    <br/><br/>
+    Thomas Bayer
+    <br/>
+    <a href="mailto:info@thomas-bayer.com">info@thomas-bayer.com</a>
+<!--
+
+    <img src="images/.gif" alt=""/><br/>
+    <b>Picture 15.) </b><br/>
+
+
+-->
+    
+
+  </body>
+</html>

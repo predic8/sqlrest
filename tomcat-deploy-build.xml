@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- ==========================================================================
+
+ $Id: tomcat-deploy-build.xml,v 1.5 2007/04/05 14:15:10 marco_h Exp $
+   
+=========================================================================== -->
+
+<project default="reload-webapp" name="sqlrest-deploy">
+
+    <!-- ================================================================== -->
+    <!-- Tomcat Tasks and Properties                                        -->
+    <!-- ================================================================== -->
+    <taskdef name="install" classname="org.apache.catalina.ant.InstallTask"/>
+    <taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask"/>
+    <taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask"/>
+
+	<!-- Root directory of the project -->
+	<property name="project.root" value="${basedir}"/>
+
+	<!-- Directories in which Ant builds the project -->
+	<property name="build.dir" value="${project.root}/build"/>
+
+	<!-- Directory where the webapp is build -->
+	<property name="webapps.dir" value="${build.dir}/webapps"/>
+
+	<!-- Classes Directory inside the webdir -->
+	<property name="webapp.dir" value="${webapps.dir}/sqlrest"/>
+
+    <property name="manager.url" value="http://localhost:8080/manager"/>
+    <property name="manager.username" value="admin"/>
+    <property name="manager.password" value="admin"/>
+    <property name="tomcat.context" value="/sqlrest"/>
+	
+    <!-- ================================================================== -->
+    <!-- Installs Webapp to Tomcat                                          -->
+    <!-- ================================================================== -->
+    <target name="install-webapp" description="Install application to servlet container">
+	   <install url="${manager.url}" 
+ 		        username="${manager.username}" 
+		        password="${manager.password}" 
+		        path="${tomcat.context}" 
+		        war="file:///${webapp.dir}"/>
+    </target>
+	
+    <!-- ================================================================== -->
+    <!-- Reload Webapp in Tomcat                                            -->
+    <!-- ================================================================== -->
+    <target name="reload-webapp" description="Reload application on servlet container">
+	    <reload url="${manager.url}" 
+		        username="${manager.username}" 
+		        password="${manager.password}" 
+		        path="${tomcat.context}"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Removes Webapp from Tomcat                                         -->
+    <!-- ================================================================== -->
+    <target name="remove-webapp" description="Remove web application">
+
+        <remove url="${manager.url}" 
+         		username="${manager.username}" 
+		        password="${manager.password}"
+        		path="${tomcat.context}"/>
+    </target>	
+    
+</project>

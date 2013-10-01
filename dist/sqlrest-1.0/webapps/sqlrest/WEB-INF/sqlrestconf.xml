@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlrestconf>
+  <!-- Optionally attach XSLT transformations to expose the XML as HTML or as RDF -->
+  
+  <!-- URI of a GRDDL transformation to convert the XML into RDF-XML -->
+  <!-- see http://www.w3.org/2003/g/data-view for info on GRDDL -->
+  <!-- 
+  <grddl>/xslt/sqlrest-xml-to-rdf-xml.xsl</grddl>
+  -->
+  <!-- URI of an XSLT transformation to convert the XML into a view suitable for a browser -->
+  <!-- (Typically HTML, though SVG is another possibility) -->
+  <!--
+  <xslt>/xslt/sqlrest-xml-to-html.xsl</xslt>
+  -->
+  <database>
+    <!--
+    
+    Hypersonic DB in process with the example Database
+    
+    -->
+    <jdbc-driver-class>org.hsqldb.jdbcDriver</jdbc-driver-class>
+    <database-url>jdbc:hsqldb:exampledb</database-url>
+    <user>sa</user>
+    <password></password>
+    <!--
+    
+    External Hypersonic DB
+    
+    <jdbc-driver-class>org.hsqldb.jdbcDriver</jdbc-driver-class>
+    <database-url>jdbc:hsqldb:hsql://localhost</database-url>
+    <user>sa</user>
+    <password></password>
+    -->
+    <!-- 
+    
+    Inet Sprinta Driver for MS SQL Server 
+    
+    <jdbc-driver-class>com.inet.tds.TdsDriver</jdbc-driver-class>
+    <database-url>jdbc:inetdae7a:localhost:1433</database-url>
+    -->
+  </database>
+</sqlrestconf>

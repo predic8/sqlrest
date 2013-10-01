@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+  <head>
+    <title>sqlREST Users Guide</title>
+    <link href="style.css" rel="stylesheet"/>
+  </head>
+
+  <body>
+  
+     <table width="100%">
+   	<tr>
+   		<td> <h1>sqlREST Users Guide</h1></td>
+   		<td><a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=78848&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a>
+</td>
+   	</tr>
+   </table>
+  
+   
+
+	<h2>Installation</h2>
+
+    <ul>
+       <li>First install a Java runtime or SDK. We recommend using Version 1.4.1 or higher.</li>
+       <li>Install a Servlet Container. <a href="http://jakarta.apache.org/tomcat/">Tomcat</a> 4.1.X for example.</li>
+       <li>Copy the sqlrest directory inside the webapps directory to the webapps directory of your servlet engine.</li>
+       <li>Start the servlet engine and point your browser at <a href="http://localhost:8080/sqlrest">http://localhost:8080/sqlrest</a>, if your Servlet engine is running at port 8080.</li>
+    </ul>
+
+    <h2>Using a different database</h2>
+
+    <p>The JDBC connection is configured in the sqlrestconf.xml. You can find sqlrestconf.xml inside the WEB-INF directory. Look at:</p>
+
+    <code>sqlrest-XXX\webapps\sqlrest\WEB-INF\sqlrestconf.xml</code>
+
+    <p>To configure the driver, enter the right values for your database. The snippet shows a configuration for a hypersonic database in server mode.</p>
+
+    <pre>
+&lt;jdbc-driver-class>org.hsqldb.jdbcDriver&lt;/jdbc-driver-class>
+&lt;database-url>jdbc:hsqldb:hsql://localhost&lt;/database-url>
+&lt;user>sa&lt;/user>
+&lt;password>&lt;/password>
+    </pre>
+
+    <h3>MS SQL Server</h3>
+
+    [ToDo]
+
+    <h2>Examples</h2>
+
+    [ToDo]
+    
+    <div>
+    <h2>Transforming sqlrest XML into other formats</h2>
+    
+    <div>
+    <h3>Generating a user interface with XSLT</h3>
+    <p>To present your data to users in HTML format, you can attach an XSLT stylesheet to your XML responses. 
+    The stylesheet will run in the user's browser and can transform the XML into an HTML presentation. The resulting HTML page may include
+    a form for editing and saving the data.</p>
+    <p>To attach a stylesheet, specify the location of the stylesheet using the &lt;xslt> element in the sqlrestconf.xml file, as shown:</p>
+    <pre>&lt;xslt>/xslt/sqlrest-to-html.xsl&lt;/xslt></pre>
+    <p>Note: the XSLT stylesheet should be accessible from the same website as sqlrest, to conform to browser security restrictions.</p>
+    </div>
+    <div>
+    <h3>Publishing "Linked Data" with GRDDL</h3>
+    <p>To present your data to semantic web user agents in RDF form, you can attach a <a href="http://www.w3.org/2003/g/data-view">GRDDL</a> transformation to your XML responses. 
+    The GRDDL transformation is an XSLT stylesheet which a GRDDL-aware agent will run to transform the XML into an RDF presentation. </p>
+    <p>To attach a GRDDL transformation, specify the location of the transformation using the &lt;grddl> element in the sqlrestconf.xml file, as shown:</p>
+    <pre>&lt;grddl>/xslt/sqlrest-to-rdf.xsl&lt;/grddl></pre>
+    </div>
+    
+    <h2>Further reading</h2>
+
+    <p>
+    <a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">Architectural Styles and
+the Design of Network-based Software Architectures</a><br/>
+    The dissertation from Thomas Roy Fielding
+    </p>
+
+    <p>
+    <a href="http://internet.conveyor.com/RESTwiki/moin.cgi/FrontPage">RESTwiki</a><br/>
+    WikiWiki Web dedicated to REST
+    </p>
+
+    <p>
+    <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396: Uniform Resource Identifiers (URI): Generic Syntax</a><br/>
+    </p>
+
+    <p>
+    <a href="http://127.0.0.1:8080/public/xml/rest-webservices.htm">REST Web Services - Eine Einführung</a><br/>
+    German introduction in REpresentational State Transfer
+    </p>
+
+
+<!--
+
+    <p>
+    <a href=""></a><br/>
+
+    </p>
+
+
+-->
+
+  </body>
+</html>
